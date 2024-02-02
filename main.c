@@ -1,127 +1,130 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define BOOL char
 #define FALSE 0
 #define TRUE 1
 
+#define ALIVE_CELL 'X'
+#define DEAD_CELL '_'
+
 /*
  * 1. Jede Zelle mit weniger als zwei lebenden Nachbarn stirbt.
  * 2. Jede Zelle mit zwei oder drei Nachbarn lebt weiter, zur nächsten Generation.
-      - Jede Iteration ist eine Generation.
+ - Jede Iteration ist eine Generation.
  * 3. Jede Zelle mit mehr als drei Nachbarn stirbt.
  * 4. Jede Zelle mit exakt drei Nachbarn erwacht zum Leben.
  */
 
-int getRandomNumber(unsigned int bound);
+int getRandomNumber(int bound);
 
 int main()
 {
-  unsigned int rows = 50;
-  unsigned int cols = 50;
+  int rows = 100;
+  int cols = 100;
   char ** game_field = (char **) malloc(rows * sizeof(char *));
 
-  for (unsigned int y = 0; y < cols; ++y)
+  for (int row = 0; row < cols; ++row)
     {
-      game_field[y] = (char *) malloc(cols * sizeof(char));
+      game_field[row] = (char *) malloc(cols * sizeof(char));
     }
 
-  for (unsigned int y = 0; y < rows; ++y)
+  for (int row = 0; row < rows; ++row)
     {
-      for (unsigned int x = 0; x < cols; ++x)
+      for (int col = 0; col < cols; ++col)
 	{
-	  game_field[y][x] = ' ';	
+	  game_field[row][col] = DEAD_CELL;	
 	}
     }
 
-  BOOL active_life = TRUE;
-
-  unsigned int alive_cells = 50;
+  int alive_cells = 99;
 
   srand(4242);
 
-  for (unsigned int y = 0; y < alive_cells; ++y)
+  for (int row = 0; row < alive_cells; ++row)
     {
-      game_field[getRandomNumber(alive_cells)][getRandomNumber(alive_cells)] = 'X';
+      game_field[getRandomNumber(alive_cells)][getRandomNumber(alive_cells)] = ALIVE_CELL;
     }
 
-  while (alive_cells)
+  while (alive_cells > 0)
     {
-      for (unsigned int y = 0; y < rows; ++y)
+      
+      for (int row = 0; row < rows; ++row)
 	{
-	  for (unsigned int x = 0; x < cols; ++x)
+	  for (int col = 0; col < cols; ++col)
 	    {
-	      unsigned int alive_neighbour_cells = 0;
-	      
+	      int alive_neighbour_cells = 0;
+
+	      int row_up = row - 1;
+	      int row_down = row + 1;
+	      int col_right = col + 1;
+	      int col_left = col - 1;
+
+	      if (row_up >= 0)
+		{
+		  alive_neighbour_cells += (game_field[row_up][col] == ALIVE_CELL) ? 1 : 0;
+		}
+	      if (row_down < rows)
+		{
+		  alive_neighbour_cells += (game_field[row_down][col] == ALIVE_CELL) ? 1 : 0;
+		}
+	      if (col_right < cols)
+		{
+		  alive_neighbour_cells += (game_field[row][col_right] == ALIVE_CELL) ? 1 : 0;
+		}
+	      if (col_left >= 0)
+		{
+		  alive_neighbour_cells += (game_field[row][col_left] == ALIVE_CELL) ? 1 : 0;
+		}
+
+	      if (alive_neighbour_cells < 2)
+		{
+		  game_field[row][col] = DEAD_CELL;
+		  --alive_cells;
+		}
+	      else if (alive_neighbour_cells > 2 && alive_neighbour_cells < 3)
+		{
+		  game_field[row][col] = ALIVE_CELL;
+		  ++alive_cells;
+		}
+	      else if (alive_neighbour_cells > 3)
+		{
+		  game_field[row][col] = DEAD_CELL;
+		  --alive_cells;
+		}
+	      else if (alive_neighbour_cells == 3)
+		{
+		  game_field[row][col] = ALIVE_CELL;
+		  ++alive_cells;
+		}
 	    }
 	}
-    }
 
-  BOOL active_life = TRUE;
+      for (int row = 0; row < rows; ++row)
+	{	 
+	  for (int col = 0; col < cols; ++col)
+	    {
+	      printf("%c", game_field[row][col]);
+	    }
 
-  unsigned int alive_cells = 50;
-
-  srand(4242);
-
-  for (unsigned int y = 0; y < alive_cells; ++y)
-    {
-      game_field[getRandomNumber(alive_cells)][getRandomNumber(alive_cells)] = 'X';
-    }
-
-  while (alive_cells)
-    {
-        for (unsigned int y = 0; y < rows; ++y)
-	  {
-	    for (unsigned int x = 0; x < cols; ++x)
-	      {
-		unsigned int alive_neighbour_cells = 0;
-
-		unsigned int row_up = y + 1;
-		unsigned int row_down = y - 1;
-		unsigned int col_right = x + 1;
-		unsigned int col_left = x - 1;
-
-		if (row_up >= 0)
-		  {
-		    game_field[row_up][x]
-		  }
-	      }
-	  }
-
-	for (unsigned int y = 0; y < rows; ++y)
-	  {
-	    for (unsigned int x = 0; x < cols; ++x)
-	      {
-		printf("%c", game_field[y][x]);
-	      }
-	  }      
-
-    }
-            
-
-  for (unsigned int y = 0; y < rows; ++y)
-    {
-      for (unsigned int x = 0; x < cols; ++x)
-	{
-	  printf("%c", game_field[y][x]);
+	  printf("\n");
 	}
+
+      sleep(1);
     }
+
+  for (int row = 0; row < cols; ++row)
+    {
+      free(game_field[row]);
+    }
+  free(game_field);
   
   return 0; 
 }
   
-int getRandomNumber(unsigned int bound)
+int getRandomNumber(int bound)
 {
   return rand() % (bound + 1);
-} 
-
-void applyToLife(void (* function)())
-{
-    for (unsigned int y = 0; y < rows; ++y)
-    {
-      for (unsigned int x = 0; x < cols; ++x)
-	{
-	  printf("%c", game_field[y][x]);
-	}
-    }
 }
+ 
