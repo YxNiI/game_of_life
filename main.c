@@ -70,6 +70,32 @@ int main()
 
   while (alive_cells)
     {
+        for (unsigned int y = 0; y < rows; ++y)
+	  {
+	    for (unsigned int x = 0; x < cols; ++x)
+	      {
+		unsigned int alive_neighbour_cells = 0;
+
+		unsigned int row_up = y + 1;
+		unsigned int row_down = y - 1;
+		unsigned int col_right = x + 1;
+		unsigned int col_left = x - 1;
+
+		if (row_up >= 0)
+		  {
+		    game_field[row_up][x]
+		  }
+	      }
+	  }
+
+	for (unsigned int y = 0; y < rows; ++y)
+	  {
+	    for (unsigned int x = 0; x < cols; ++x)
+	      {
+		printf("%c", game_field[y][x]);
+	      }
+	  }      
+
     }
             
 
