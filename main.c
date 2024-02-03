@@ -1,14 +1,12 @@
+#ifdef _WIN32
+#include <conio.h>
+#else
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#define clrscr() printf("\e[1;1H\e[2J")
+#endif
 
-/*
- * 1. Jede Zelle mit weniger als zwei lebenden Nachbarn stirbt.
- * 2. Jede Zelle mit zwei oder drei Nachbarn lebt weiter, zur nächsten Generation.
- - Jede Iteration ist eine Generation.
- * 3. Jede Zelle mit mehr als drei Nachbarn stirbt.
- * 4. Jede Zelle mit exakt drei Nachbarn erwacht zum Leben.
- */
+#include <stdlib.h>
+#include <time.h>
 
 int getRandomZeroOrOne();
 
@@ -36,7 +34,7 @@ int main()
     }
 
   // Initialize game_field
-  int alive_cells = (rows + cols) / 2;
+  int alive_cells = 0;
 
   srand(4242);
 
@@ -54,6 +52,7 @@ int main()
 	  if (trueOrFalse)
 	    {
 	      game_field[row][col] = ALIVE_CELL;
+	      ++alive_cells;
 	    }
 	  else
 	    {
@@ -62,8 +61,13 @@ int main()
 	}
     }
 
+  long milliseconds = 125;
+  struct timespec timegap;
+  timegap.tv_sec = milliseconds / 1000;
+  timegap.tv_nsec = (milliseconds % 1000) * 1000000;
+
   // Game process
-  while (alive_cells > 0)
+  while (1)
     {
       for (int row = 0; row < rows; ++row)
 	{	 
@@ -75,8 +79,15 @@ int main()
 	  printf("\n");
 	}
 
-      printf("-------------------------------------------------------");
-      sleep(1);
+      clrscr();
+      nanosleep(&timegap, NULL);
+      
+
+      unsigned int size = rows * cols;
+      char * marked_for_death[size];
+      char * marked_for_life[size];
+      unsigned int death_mark_count = 0;
+      unsigned int life_mark_count = 0;
       
       for (int row = 0; row < rows; ++row)
 	{
@@ -133,28 +144,48 @@ int main()
 		    ++alive_neighbour_cells;
 		}
 
+	      /*
+	       * 1. Jede Zelle mit weniger als zwei lebenden Nachbarn stirbt.
+	       * 2. Jede Zelle mit zwei oder drei Nachbarn lebt weiter, zur nächsten Generation.
+	       - Jede Iteration ist eine Generation.
+	       * 3. Jede Zelle mit mehr als drei Nachbarn stirbt.
+	       * 4. Jede Zelle mit exakt drei Nachbarn erwacht zum Leben.
+	       */
+
 	      // Apply conway's game of life rules
 	      if (alive_neighbour_cells < 2)
 		{
-		  game_field[row][col] = DEAD_CELL;
-		  --alive_cells;
+		  marked_for_death[death_mark_count] = &game_field[row][col];
+		  ++death_mark_count;
 		}
 	      else if (alive_neighbour_cells >= 2 && alive_neighbour_cells <= 3)
 		{
-		  game_field[row][col] = ALIVE_CELL;
-		  ++alive_cells;
+		  marked_for_life[life_mark_count] =  &game_field[row][col];
+		  ++life_mark_count;
 		}
 	      else if (alive_neighbour_cells > 3)
 		{
-		  game_field[row][col] = DEAD_CELL;
-		  --alive_cells;
+		  marked_for_death[death_mark_count] = &game_field[row][col];
+		  ++death_mark_count;		  
 		}
 	      else if (alive_neighbour_cells == 3)
 		{
-		  game_field[row][col] = ALIVE_CELL;
-		  ++alive_cells;
+		  marked_for_life[life_mark_count] =  &game_field[row][col];
+		  ++life_mark_count;
 		}
 	    }
+	}
+
+      for (unsigned int index = 0; index < death_mark_count; ++index)
+	{
+	  * marked_for_death[index] = DEAD_CELL;
+	  --alive_cells;
+	}
+
+      for (unsigned int index = 0; index < life_mark_count; ++index)
+	{
+	  * marked_for_life[index] = ALIVE_CELL;
+	  ++alive_cells;
 	}
     }
   
