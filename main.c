@@ -21,11 +21,11 @@ int getRandomZeroOrOne();
 
 int main()
 {
-  int rows = 50;
+  int rows = 25;
   int cols = 50;
   char ** game_field = (char **) malloc(rows * sizeof(char *));
 
-  for (int row = 0; row < cols; ++row)
+  for (int row = 0; row < rows; ++row)
     {
       game_field[row] = (char *) malloc(cols * sizeof(char));
     }
@@ -51,7 +51,9 @@ int main()
     {
       for (int col = col_cell_placement_start; col < col_cell_placement_end; ++col)
 	{
-	  if (getRandomZeroOrOne() == TRUE)
+	  unsigned int trueOrFalse = rand() % (1 + 1);
+	  
+	  if (trueOrFalse)
 	    {
 	      game_field[row][col] = ALIVE_CELL;
 	    }
@@ -129,7 +131,7 @@ int main()
 	}
     }
 
-  for (int row = 0; row < cols; ++row)
+  for (int row = 0; row < rows; ++row)
     {
       free(game_field[row]);
     }
