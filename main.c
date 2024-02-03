@@ -17,12 +17,12 @@
  * 4. Jede Zelle mit exakt drei Nachbarn erwacht zum Leben.
  */
 
-int getRandomNumber(int bound);
+int getRandomZeroOrOne();
 
 int main()
 {
-  int rows = 100;
-  int cols = 100;
+  int rows = 50;
+  int cols = 50;
   char ** game_field = (char **) malloc(rows * sizeof(char *));
 
   for (int row = 0; row < cols; ++row)
@@ -38,17 +38,44 @@ int main()
 	}
     }
 
-  int alive_cells = 99;
+  int alive_cells = (rows + cols) / 2;
 
   srand(4242);
 
-  for (int row = 0; row < alive_cells; ++row)
+  int row_cell_placement_start = rows / 4;
+  int row_cell_placement_end = row_cell_placement_start + (rows / 2);
+  int col_cell_placement_start = cols / 4;
+  int col_cell_placement_end = col_cell_placement_start + (cols / 2);
+
+  for (int row = row_cell_placement_start; row < row_cell_placement_end; ++row)
     {
-      game_field[getRandomNumber(alive_cells)][getRandomNumber(alive_cells)] = ALIVE_CELL;
+      for (int col = col_cell_placement_start; col < col_cell_placement_end; ++col)
+	{
+	  if (getRandomZeroOrOne() == TRUE)
+	    {
+	      game_field[row][col] = ALIVE_CELL;
+	    }
+	  else
+	    {
+	      game_field[row][col] = DEAD_CELL;
+	    }
+	}
     }
 
   while (alive_cells > 0)
     {
+      for (int row = 0; row < rows; ++row)
+	{	 
+	  for (int col = 0; col < cols; ++col)
+	    {
+	      printf("%c", game_field[row][col]);
+	    }
+
+	  printf("\n");
+	}
+
+      printf("-------------------------------------------------------");
+      sleep(1);
       
       for (int row = 0; row < rows; ++row)
 	{
@@ -100,18 +127,6 @@ int main()
 		}
 	    }
 	}
-
-      for (int row = 0; row < rows; ++row)
-	{	 
-	  for (int col = 0; col < cols; ++col)
-	    {
-	      printf("%c", game_field[row][col]);
-	    }
-
-	  printf("\n");
-	}
-
-      sleep(1);
     }
 
   for (int row = 0; row < cols; ++row)
@@ -123,8 +138,8 @@ int main()
   return 0; 
 }
   
-int getRandomNumber(int bound)
+int getRandomZeroOrOne()
 {
-  return rand() % (bound + 1);
+  return rand() % (1 + 1);
 }
  
