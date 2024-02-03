@@ -2,13 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define BOOL char
-#define FALSE 0
-#define TRUE 1
-
-#define ALIVE_CELL 'X'
-#define DEAD_CELL '_'
-
 /*
  * 1. Jede Zelle mit weniger als zwei lebenden Nachbarn stirbt.
  * 2. Jede Zelle mit zwei oder drei Nachbarn lebt weiter, zur nächsten Generation.
@@ -21,6 +14,10 @@ int getRandomZeroOrOne();
 
 int main()
 {
+  const char ALIVE_CELL = 'X';
+  const char DEAD_CELL = '_';
+  
+  // Create game_field
   int rows = 25;
   int cols = 50;
   char ** game_field = (char **) malloc(rows * sizeof(char *));
@@ -38,6 +35,7 @@ int main()
 	}
     }
 
+  // Initialize game_field
   int alive_cells = (rows + cols) / 2;
 
   srand(4242);
@@ -64,6 +62,7 @@ int main()
 	}
     }
 
+  // Game process
   while (alive_cells > 0)
     {
       for (int row = 0; row < rows; ++row)
@@ -90,29 +89,57 @@ int main()
 	      int col_right = col + 1;
 	      int col_left = col - 1;
 
+	      // Check horizontal and vertical cells
 	      if (row_up >= 0)
 		{
-		  alive_neighbour_cells += (game_field[row_up][col] == ALIVE_CELL) ? 1 : 0;
+		  if (game_field[row_up][col] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
 		}
 	      if (row_down < rows)
 		{
-		  alive_neighbour_cells += (game_field[row_down][col] == ALIVE_CELL) ? 1 : 0;
+		  if (game_field[row_down][col] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
 		}
 	      if (col_right < cols)
 		{
-		  alive_neighbour_cells += (game_field[row][col_right] == ALIVE_CELL) ? 1 : 0;
+		  if (game_field[row][col_right] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
 		}
 	      if (col_left >= 0)
 		{
-		  alive_neighbour_cells += (game_field[row][col_left] == ALIVE_CELL) ? 1 : 0;
+		  if (game_field[row][col_left] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
 		}
 
+	      // Check diagonal cells
+	      if ((row_up >= 0) && (col_right < cols))
+		{
+		  if (game_field[row_up][col_right] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
+		}
+	      if ((row_down < rows) && (col_right < cols))
+		{
+		  if (game_field[row_down][col_right] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
+		}
+	      if ((row_down < rows) && (col_left >= 0))
+		{
+		  if (game_field[row_down][col_left] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
+		}
+	      if ((row_up >= rows) && (col_left >= 0))
+		{
+		  if (game_field[row_up][col_left] == ALIVE_CELL)
+		    ++alive_neighbour_cells;
+		}
+
+	      // Apply conway's game of life rules
 	      if (alive_neighbour_cells < 2)
 		{
 		  game_field[row][col] = DEAD_CELL;
 		  --alive_cells;
 		}
-	      else if (alive_neighbour_cells > 2 && alive_neighbour_cells < 3)
+	      else if (alive_neighbour_cells >= 2 && alive_neighbour_cells <= 3)
 		{
 		  game_field[row][col] = ALIVE_CELL;
 		  ++alive_cells;
@@ -130,7 +157,8 @@ int main()
 	    }
 	}
     }
-
+  
+  // Freeing the game_field
   for (int row = 0; row < rows; ++row)
     {
       free(game_field[row]);
@@ -139,9 +167,3 @@ int main()
   
   return 0; 
 }
-  
-int getRandomZeroOrOne()
-{
-  return rand() % (1 + 1);
-}
- 
