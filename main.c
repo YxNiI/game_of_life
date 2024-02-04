@@ -1,12 +1,13 @@
+// Import library for clearing the screen, if executed on windows
 #ifdef _WIN32
 #include <conio.h>
-#else
-#include <stdio.h>
-#define clear_screen() printf("\e[1;1H\e[2J")
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#define clear_screen() printf("\e[1;1H\e[2J")
 
 #define bool char
 #define TRUE 1
