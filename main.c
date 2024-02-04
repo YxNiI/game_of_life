@@ -67,6 +67,8 @@ int main()
 
   
   // Game process
+
+  //Print game_field
   long milliseconds = 125;
   struct timespec timegap;
   timegap.tv_sec = milliseconds / 1000;
@@ -87,6 +89,7 @@ int main()
       clear_screen();
       nanosleep(&timegap, NULL);      
 
+      // Determine ALIVE_CELLs and DEAD_CELLs in next generation
       unsigned int size = rows * cols;
       char * marked_for_death[size];
       char * marked_for_life[size];
@@ -116,38 +119,25 @@ int main()
 	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows) && (col_left >= 0), &game_field[row_down][col_left]);
 	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= rows) && (col_left >= 0), &game_field[row_up][col_left]);
 	      
-	      /*
-	       * 1. Jede Zelle mit weniger als zwei lebenden Nachbarn stirbt.
-	       * 2. Jede Zelle mit zwei oder drei Nachbarn lebt weiter, zur nächsten Generation.
-	       - Jede Iteration ist eine Generation.
-	       * 3. Jede Zelle mit mehr als drei Nachbarn stirbt.
-	       * 4. Jede Zelle mit exakt drei Nachbarn erwacht zum Leben.
-	       */
-
 	      // Apply conway's game of life rules
-	      if (alive_neighbour_cells < 2)
+	      if (alive_neighbour_cells == 2)
 		{
-		  marked_for_death[death_mark_count] = &game_field[row][col];
-		  ++death_mark_count;
-		}
-	      else if (alive_neighbour_cells >= 2 && alive_neighbour_cells <= 3)
-		{
-		  marked_for_life[life_mark_count] =  &game_field[row][col];
-		  ++life_mark_count;
-		}
-	      else if (alive_neighbour_cells > 3)
-		{
-		  marked_for_death[death_mark_count] = &game_field[row][col];
-		  ++death_mark_count;		  
+		  continue;
 		}
 	      else if (alive_neighbour_cells == 3)
 		{
 		  marked_for_life[life_mark_count] =  &game_field[row][col];
 		  ++life_mark_count;
 		}
+	      else if ((alive_neighbour_cells > 3) || (alive_neighbour_cells < 2))
+		{
+		  marked_for_death[death_mark_count] = &game_field[row][col];
+		  ++death_mark_count;		  
+		}	      
 	    }
 	}
 
+      // Changing the game_field
       for (unsigned int index = 0; index < death_mark_count; ++index)
 	{
 	  * marked_for_death[index] = DEAD_CELL;
@@ -160,8 +150,8 @@ int main()
 	  ++alive_cells;
 	}
     }
+
   
-  // Freeing the game_field
   for (int row = 0; row < rows; ++row)
     {
       free(game_field[row]);
