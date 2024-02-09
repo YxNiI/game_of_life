@@ -4,6 +4,14 @@
 #define ALIVE_CELL 'X'
 #define DEAD_CELL ' '
 
-char ** create_game_field(int rows, int cols);
+typedef struct
+{
+  int rows;
+  int cols;
+  char ** field;
+} game_field;
+
+game_field * create_game_field(int rows, int cols);
+int placeCells(char ** game_field, unsigned int seed);
 
 #endif

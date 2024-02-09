@@ -15,6 +15,7 @@ int main()
   int rows = 25;
   int cols = 50;  
   char **game_field = create_game_field(rows, cols);
+  int alive_cells = placeCells(game_field, 42);
 
   int row_cell_placement_start = rows / 4;
   int row_cell_placement_end = row_cell_placement_start + (rows / 2);
