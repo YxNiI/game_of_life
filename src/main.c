@@ -1,13 +1,6 @@
-// Import library for clearing the screen, if executed on windows
-#ifdef _WIN32
-#include <conio.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-#define clear_screen() printf("\e[1;1H\e[2J")
 
 #define bool char
 #define TRUE 1
@@ -86,9 +79,9 @@ int main()
 
 	  printf("\n");
 	}
-
-      clear_screen();
-      nanosleep(&timegap, NULL);      
+      
+      nanosleep(&timegap, NULL);
+      system("clear");
 
       // Determine ALIVE_CELLs and DEAD_CELLs in next generation
       unsigned int size = rows * cols;
