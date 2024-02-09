@@ -2,31 +2,19 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "./data/game_field.h"
+
 #define bool char
 #define TRUE 1
 #define FALSE 0
-
-#define ALIVE_CELL 'X'
-#define DEAD_CELL ' '
 
 bool if_true_check_if_cell_is_alive(bool condition, char * cell);
 
 int main()
 { 
-  // Create game_field
   int rows = 25;
   int cols = 50;  
-  char game_field[25][50];
-
-  
-  // Initialize game_field
-  for (int row = 0; row < rows; ++row)
-    {
-      for (int col = 0; col < cols; ++col)
-	{
-	  game_field[row][col] = DEAD_CELL;	
-	}
-    }
+  char **game_field = create_game_field(rows, cols);
 
   int row_cell_placement_start = rows / 4;
   int row_cell_placement_end = row_cell_placement_start + (rows / 2);

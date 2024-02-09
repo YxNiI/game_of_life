@@ -1,7 +1,7 @@
 # Declaring/Filling directories to compile
 BINARY := ./bin
-SRCDIRS := ./src/
-# INCLDIRS :=
+SRCDIRS := ./src/ ./src/data/
+CLDIRS := ./src/data/
 
 # Declaring/Filling compiler variables
 CC := gcc
