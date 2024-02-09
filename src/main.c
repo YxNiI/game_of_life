@@ -15,14 +15,8 @@ int main()
 { 
   // Create game_field
   int rows = 25;
-  int cols = 50;
-  
-  char ** game_field = (char **) malloc(rows * sizeof(char *));
-
-  for (int row = 0; row < rows; ++row)
-    {
-      game_field[row] = (char *) malloc(cols * sizeof(char));
-    }
+  int cols = 50;  
+  char game_field[25][50];
 
   
   // Initialize game_field
@@ -61,8 +55,6 @@ int main()
 
   
   // Game process
-
-  //Print game_field
   long milliseconds = 125;
   struct timespec timegap;
   timegap.tv_sec = milliseconds / 1000;
@@ -70,6 +62,7 @@ int main()
 
   while (1)
     {
+      // Printing the game_field
       for (int row = 0; row < rows; ++row)
 	{	 
 	  for (int col = 0; col < cols; ++col)
@@ -82,6 +75,7 @@ int main()
       
       nanosleep(&timegap, NULL);
       system("clear");
+      
 
       // Determine ALIVE_CELLs and DEAD_CELLs in next generation
       unsigned int size = rows * cols;
