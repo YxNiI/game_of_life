@@ -1,8 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "./data/gameField.h"
+#include "./presentation/consoleView.h"
 
 #define bool char
 #define TRUE 1
@@ -27,16 +27,7 @@ int main()
 
   while (1)
     {
-      // Printing the gameField
-      for (int row = 0; row < rows; ++row)
-	{	 
-	  for (int col = 0; col < cols; ++col)
-	    {
-	      printf("%c", field[row][col]);
-	    }
-
-	  printf("\n");
-	}
+      printView(gameField);
       
       nanosleep(&timegap, NULL);
       system("clear");
