@@ -21,6 +21,8 @@ GameField * createGameField(int rows, int cols)
 	}      
     }
 
+  setRandomCellsAlive(gameField);
+
   return gameField;
 }
 
@@ -37,7 +39,7 @@ void destroy(GameField *  gameField)
   free(gameField);
 }
 
-int setRandomCellsAlive(GameField * gameField, unsigned int seed)
+void setRandomCellsAlive(GameField * gameField)
 {
   unsigned int rows = gameField->rows;
   unsigned int cols = gameField->cols;
@@ -47,7 +49,7 @@ int setRandomCellsAlive(GameField * gameField, unsigned int seed)
   unsigned int colCellPlacementStart = cols / 4;
   unsigned int colCellPlacementEnd = colCellPlacementStart + (cols / 2);
   
-  srand(seed);
+  srand(8787);
   unsigned int aliveCells = 0;
 
   for (unsigned int row = rowCellPlacementStart; row < rowCellPlacementEnd; ++row)
@@ -63,6 +65,4 @@ int setRandomCellsAlive(GameField * gameField, unsigned int seed)
 	    }
 	}
     }
-  
-  return aliveCells;
 }
