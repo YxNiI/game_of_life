@@ -35,7 +35,7 @@ int set_alive_cells_random(t_game_field * game_field, unsigned int seed)
   unsigned int col_cell_placement_end = col_cell_placement_start + (cols / 2);
   
   srand(seed);
-  int alive_cells = 0;
+  unsigned int alive_cells = 0;
 
   for (unsigned int row = row_cell_placement_start; row < row_cell_placement_end; ++row)
     {

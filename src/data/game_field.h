@@ -13,6 +13,6 @@ typedef struct
 
 t_game_field * create_game_field(int rows, int cols);
 
-int placeCells(char ** game_field, unsigned int seed);
+int set_alive_cells_random(t_game_field * game_field, unsigned int seed);
 
 #endif
