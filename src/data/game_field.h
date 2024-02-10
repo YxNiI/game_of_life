@@ -9,9 +9,10 @@ typedef struct
   int rows;
   int cols;
   char ** field;
-} game_field;
+} t_game_field;
 
-game_field * create_game_field(int rows, int cols);
+t_game_field * create_game_field(int rows, int cols);
+
 int placeCells(char ** game_field, unsigned int seed);
 
 #endif

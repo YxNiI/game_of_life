@@ -11,37 +11,13 @@
 bool if_true_check_if_cell_is_alive(bool condition, char * cell);
 
 int main()
-{ 
-  int rows = 25;
-  int cols = 50;  
-  char **game_field = create_game_field(rows, cols);
-  int alive_cells = placeCells(game_field, 42);
+{
+  t_game_field * game_field = create_game_field(25, 50);
+  int rows = game_field->rows;
+  int cols = game_field->cols;
 
-  int row_cell_placement_start = rows / 4;
-  int row_cell_placement_end = row_cell_placement_start + (rows / 2);
-  int col_cell_placement_start = cols / 4;
-  int col_cell_placement_end = col_cell_placement_start + (cols / 2);
-  srand(42);
-  int alive_cells = 0;
-
-  for (int row = row_cell_placement_start; row < row_cell_placement_end; ++row)
-    {
-      for (int col = col_cell_placement_start; col < col_cell_placement_end; ++col)
-	{
-	  unsigned int randomTrueOrFalse = rand() % (1 + 1);
-	  
-	  if (randomTrueOrFalse)
-	    {
-	      game_field[row][col] = ALIVE_CELL;
-	      ++alive_cells;
-	    }
-	  else
-	    {
-	      game_field[row][col] = DEAD_CELL;
-	    }
-	}
-    }
-
+  char ** field = game_field->field;
+  int alive_cells = set_alive_cells_random(game_field, 8888);
   
   // Game process
   long milliseconds = 125;
@@ -56,7 +32,7 @@ int main()
 	{	 
 	  for (int col = 0; col < cols; ++col)
 	    {
-	      printf("%c", game_field[row][col]);
+	      printf("%c", field[row][col]);
 	    }
 
 	  printf("\n");
@@ -85,16 +61,16 @@ int main()
 	      int alive_neighbour_cells = 0;
 
 	      // Check horizontal and vertical cells
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= 0), &game_field[row_up][col]);
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows), &game_field[row_down][col]);
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((col_right < cols), &game_field[row][col_right]);
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((col_left >= 0), &game_field[row][col_left]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= 0), &field[row_up][col]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows), &field[row_down][col]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((col_right < cols), &field[row][col_right]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((col_left >= 0), &field[row][col_left]);
 	      
 	      // Check diagonal cells
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= 0) && (col_right < cols), &game_field[row_up][col_right]);
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows) && (col_right < cols), &game_field[row_down][col_right]);
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows) && (col_left >= 0), &game_field[row_down][col_left]);
-	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= rows) && (col_left >= 0), &game_field[row_up][col_left]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= 0) && (col_right < cols), &field[row_up][col_right]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows) && (col_right < cols), &field[row_down][col_right]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_down < rows) && (col_left >= 0), &field[row_down][col_left]);
+	      alive_neighbour_cells += if_true_check_if_cell_is_alive((row_up >= rows) && (col_left >= 0), &field[row_up][col_left]);
 	      
 	      // Apply conway's game of life rules
 	      if (alive_neighbour_cells == 2)
@@ -103,12 +79,12 @@ int main()
 		}
 	      else if (alive_neighbour_cells == 3)
 		{
-		  marked_for_life[life_mark_count] =  &game_field[row][col];
+		  marked_for_life[life_mark_count] =  &field[row][col];
 		  ++life_mark_count;
 		}
 	      else if ((alive_neighbour_cells > 3) || (alive_neighbour_cells < 2))
 		{
-		  marked_for_death[death_mark_count] = &game_field[row][col];
+		  marked_for_death[death_mark_count] = &field[row][col];
 		  ++death_mark_count;		  
 		}	      
 	    }
@@ -128,12 +104,12 @@ int main()
 	}
     }
 
-  
+  // TODO: Also need to free the pointer to the game_field type.
   for (int row = 0; row < rows; ++row)
     {
-      free(game_field[row]);
+      free(field[row]);
     }
-  free(game_field);
+  free(field);
   
   return 0; 
 }
