@@ -104,12 +104,7 @@ int main()
 	}
     }
 
-  // TODO: Also need to free the pointer to the gameField type.
-  for (int row = 0; row < rows; ++row)
-    {
-      free(field[row]);
-    }
-  free(field);
+  destroy(gameField);
   
   return 0; 
 }

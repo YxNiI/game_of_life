@@ -13,6 +13,8 @@ typedef struct
 
 GameField * createGameField(int rows, int cols);
 
+void destroy(GameField * gameField);
+
 int setRandomCellsAlive(GameField * gameField, unsigned int seed);
 
 #endif

@@ -24,6 +24,19 @@ GameField * createGameField(int rows, int cols)
   return gameField;
 }
 
+void destroy(GameField *  gameField)
+{
+  char ** field = gameField->field;
+  
+  for (int row = 0; row < gameField->rows; ++row)
+    {
+      free(field[row]);
+    }
+  free(field);
+
+  free(gameField);
+}
+
 int setRandomCellsAlive(GameField * gameField, unsigned int seed)
 {
   unsigned int rows = gameField->rows;
