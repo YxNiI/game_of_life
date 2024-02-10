@@ -6,7 +6,10 @@ CLDIRS := ./src/data/
 # Declaring/Filling compiler variables
 CC := gcc
 DEPENDENCYFLAGS := -MD -MP
-CFLAGS := -Wall -Wextra -g -pedantic $(foreach DIRECTORY, $(INCLDIRS), -I $(DIRECTORY)) $(DEPENDENCYFLAGS)
+CFLAGS := -Wall -Wextra -g -pedantic -Wattributes -Wimplicit-int \
+	-Wimplicit-function-declaration -Wincompatible-pointer-types \
+	-Wint-conversion -Wmain -Wpointer-arith -Wpointer-sign \
+	$(foreach DIRECTORY, $(INCLDIRS), -I $(DIRECTORY)) $(DEPENDENCYFLAGS)
 
 # Declaring/Filling file variables
 CFILES := $(foreach DIRECTORY, $(SRCDIRS), $(wildcard $(DIRECTORY)*.c))
