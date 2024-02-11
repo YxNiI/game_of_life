@@ -2,6 +2,8 @@
 #include "../data/gameField.h"
 
 static bool isAlive(char * cell);
+static void incrementIfTrue(bool condition, int * var);
+static void update(char * array, char newData, unsigned int numUpdates);
 
 void iterateGeneration(GameField * gameField)
 {
@@ -31,43 +33,34 @@ void iterateGeneration(GameField * gameField)
 	      
 	  int aliveNeighbourCells = 0;
 
-	  // Check horizontal and vertical cells	  
-	  if (rowUpInBounds && isAlive(&field[rowUp][col]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
-	  if (rowDownInBounds && isAlive(&field[rowDown][col]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
-	  if (colRightInBounds && isAlive(&field[row][colRight]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
-	  if (colLeftInBounds && isAlive(&field[row][colLeft]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
+	  // Check horizontal and vertical cells	  	  
+	  incrementIfTrue((rowUpInBounds &&
+			   isAlive(&field[rowUp][col])),
+			  &aliveNeighbourCells);
+	  incrementIfTrue((rowDownInBounds &&
+			   isAlive(&field[rowDown][col])),
+			  &aliveNeighbourCells);
+	  incrementIfTrue((colRightInBounds &&
+			   isAlive(&field[row][colRight])),
+			  &aliveNeighbourCells);
+	  incrementIfTrue((colLeftInBounds &&
+			   isAlive(&field[row][colLeft])),
+			  &aliveNeighbourCells);	  
 	      
 	  // Check diagonal cells
-	  if ((rowUpInBounds && colRightInBounds) && isAlive(&field[rowUp][colRight]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
-	  if ((rowDownInBounds && colRightInBounds) && isAlive(&field[rowDown][colRight]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
-	  if ((rowDownInBounds && colLeftInBounds) && isAlive(&field[rowDown][colLeft]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
-	  if ((rowUpInBounds && colLeftInBounds) && isAlive(&field[rowUp][colLeft]))
-	    {
-	      ++aliveNeighbourCells;
-	    }
+	  incrementIfTrue(((rowUpInBounds && colRightInBounds) &&
+			   isAlive(&field[rowUp][colRight])),
+			  &aliveNeighbourCells);
+	  incrementIfTrue(((rowDownInBounds && colRightInBounds) &&
+			   isAlive(&field[rowDown][colRight])),
+			  &aliveNeighbourCells);
+	  incrementIfTrue(((rowDownInBounds && colLeftInBounds) &&
+			   isAlive(&field[rowDown][colLeft])),
+			  &aliveNeighbourCells);
+	  incrementIfTrue(((rowUpInBounds && colLeftInBounds) &&
+			   isAlive(&field[rowUp][colLeft])),
+			  &aliveNeighbourCells);	  
 	      
-	  // Apply conway's game of life rules
 	  if (aliveNeighbourCells == 2)
 	    {
 	      continue;
@@ -81,24 +74,31 @@ void iterateGeneration(GameField * gameField)
 	    {
 	      markedForDeath[deathMarkCount] = &field[row][col];
 	      ++deathMarkCount;		  
-	    }	      
+	    }
 	}
     }
-
-  // Changing the gameField
-  for (unsigned int index = 0; index < deathMarkCount; ++index)
-    {
-      * markedForDeath[index] = DEAD_CELL;
-    }
-
-  for (unsigned int index = 0; index < lifeMarkCount; ++index)
-    {
-      * markedForLife[index] = ALIVE_CELL;
-    }
-
+  
+  update(markedForDeath, DEAD_CELL, deathMarkCount);
+  update(markedForLife, ALIVE_CELL, lifeMarkCount);
 }
 
 static bool isAlive(char * cell)
 {
   return * cell == ALIVE_CELL;
+}
+
+static void incrementIfTrue(bool condition, int * var)
+{
+  if (condition)
+    {
+      ++(* var);
+    }
+}
+
+static void update(char * array, char newData, unsigned int numUpdates)
+{
+  for (unsigned int index = 0; index < numUpdates; ++index)
+    {
+      * array[numUpdates] = newData;
+    }
 }
