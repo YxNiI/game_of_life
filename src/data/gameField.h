@@ -15,6 +15,4 @@ GameField * createGameField(int rows, int cols);
 
 void destroy(GameField * gameField);
 
-void setRandomCellsAlive(GameField * gameField);
-
 #endif

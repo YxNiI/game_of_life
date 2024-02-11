@@ -1,7 +1,7 @@
 #include "./gameRules.h"
 #include "../data/gameField.h"
 
-void applyRules(GameField * gameField)
+void iterateGeneration(GameField * gameField)
 {
   int rows = gameField->rows;
   int cols = gameField->cols;
@@ -67,7 +67,7 @@ void applyRules(GameField * gameField)
 
 }
 
-bool ifTrueCheckIfCellIsAlive(bool condition, char * cell)
+static bool ifTrueCheckIfCellIsAlive(bool condition, char * cell)
 {
   if (condition)
     {

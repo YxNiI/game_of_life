@@ -7,8 +7,6 @@
 #define TRUE 1
 #define FALSE 0
 
-void applyRules(GameField * gameField);
-
-bool ifTrueCheckIfCellIsAlive(bool condition, char * cell);
+void iterateGeneration(GameField * gameField);
 
 #endif

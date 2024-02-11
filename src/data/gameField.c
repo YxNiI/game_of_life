@@ -39,7 +39,7 @@ void destroy(GameField *  gameField)
   free(gameField);
 }
 
-void setRandomCellsAlive(GameField * gameField)
+static void setRandomCellsAlive(GameField * gameField)
 {
   unsigned int rows = gameField->rows;
   unsigned int cols = gameField->cols;
