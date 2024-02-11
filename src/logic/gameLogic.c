@@ -3,19 +3,20 @@
 
 static bool isAlive(char * cell);
 static void incrementIfTrue(bool condition, int * var);
-static void update(char ** array, char newData, unsigned int numUpdates);
+static void setAndIncrement(char ** array, char * address, unsigned int * index);
+static void set(char ** array, char newData, unsigned int numberOfSets);
 
-void iterateGeneration(GameField * gameField)
+void incrementGeneration(GameField * gameField)
 {
   int rows = gameField->rows;
   int cols = gameField->cols;
   char ** field = gameField->field;
   
   unsigned int size = rows * cols;
-  char * markedForDeath[size];
-  char * markedForLife[size];
-  unsigned int deathMarkCount = 0;
-  unsigned int lifeMarkCount = 0;
+  char * deathMarkArray[size];
+  char * lifeMarkArray[size];
+  unsigned int deathMarkIndex = 0;
+  unsigned int lifeMarkIndex = 0;
       
   for (int row = 0; row < rows; ++row)
     {
@@ -59,27 +60,26 @@ void iterateGeneration(GameField * gameField)
 			  &aliveNeighbourCells);
 	  incrementIfTrue(((rowUpInBounds && colLeftInBounds) &&
 			   isAlive(&field[rowUp][colLeft])),
-			  &aliveNeighbourCells);	  
-	      
+			  &aliveNeighbourCells);
+	 
+	  char * currentAddress = &field[row][col];
 	  if (aliveNeighbourCells == 2)
 	    {
 	      continue;
 	    }
 	  else if (aliveNeighbourCells == 3)
-	    {
-	      markedForLife[lifeMarkCount] =  &field[row][col];
-	      ++lifeMarkCount;
+	    {	      
+	      setAndIncrement(lifeMarkArray, currentAddress, &lifeMarkIndex);
 	    }
 	  else if ((aliveNeighbourCells > 3) || (aliveNeighbourCells < 2))
-	    {
-	      markedForDeath[deathMarkCount] = &field[row][col];
-	      ++deathMarkCount;		  
+	    {	      
+	      setAndIncrement(deathMarkArray, currentAddress, &deathMarkIndex);
 	    }
 	}
     }
   
-  update(markedForDeath, DEAD_CELL, deathMarkCount);
-  update(markedForLife, ALIVE_CELL, lifeMarkCount);
+  set(deathMarkArray, DEAD_CELL, deathMarkIndex);
+  set(lifeMarkArray, ALIVE_CELL, lifeMarkIndex);
 }
 
 static bool isAlive(char * cell)
@@ -95,9 +95,15 @@ static void incrementIfTrue(bool condition, int * var)
     }
 }
 
-static void update(char ** array, char newData, unsigned int numUpdates)
+static void setAndIncrement(char ** array, char * newData, unsigned int * index)
 {
-  for (unsigned int index = 0; index < numUpdates; ++index)
+  array[(* index)] = newData;
+  ++(* index);
+}
+
+static void set(char ** array, char newData, unsigned int numberOfSets)
+{
+  for (unsigned int index = 0; index < numberOfSets; ++index)
     {
       * array[index] = newData;
     }

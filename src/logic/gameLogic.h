@@ -7,6 +7,6 @@
 #define TRUE 1
 #define FALSE 0
 
-void iterateGeneration(GameField * gameField);
+void incrementGeneration(GameField * gameField);
 
 #endif

@@ -21,7 +21,7 @@ int main()
       nanosleep(&timegap, NULL);
       system("clear");
       
-      iterateGeneration(gameField);
+      incrementGeneration(gameField);
     }
 
   destroy(gameField);
