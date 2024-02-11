@@ -3,7 +3,7 @@
 
 static bool isAlive(char * cell);
 static void incrementIfTrue(bool condition, int * var);
-static void update(char * array, char newData, unsigned int numUpdates);
+static void update(char ** array, char newData, unsigned int numUpdates);
 
 void iterateGeneration(GameField * gameField)
 {
@@ -95,10 +95,10 @@ static void incrementIfTrue(bool condition, int * var)
     }
 }
 
-static void update(char * array, char newData, unsigned int numUpdates)
+static void update(char ** array, char newData, unsigned int numUpdates)
 {
   for (unsigned int index = 0; index < numUpdates; ++index)
     {
-      * array[numUpdates] = newData;
+      * array[index] = newData;
     }
 }
