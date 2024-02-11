@@ -3,7 +3,7 @@
 
 #include "./data/gameField.h"
 #include "./presentation/consoleView.h"
-#include "./logic/gameRules.h"
+#include "./logic/gameLogic.h"
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
 
   while (1)
     {
-      printView(gameField);
+      print(gameField);
       
       nanosleep(&timegap, NULL);
       system("clear");

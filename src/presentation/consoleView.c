@@ -3,7 +3,7 @@
 #include "./consoleView.h"
 #include "../data/gameField.h"
 
-void printView(GameField * gameField)
+void print(GameField * gameField)
 {
   for (int row = 0; row < gameField->rows; ++row)
     {	 

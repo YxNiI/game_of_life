@@ -1,5 +1,7 @@
-#include "./gameRules.h"
+#include "./gameLogic.h"
 #include "../data/gameField.h"
+
+static bool isAlive(char * cell);
 
 void iterateGeneration(GameField * gameField)
 {
@@ -21,20 +23,49 @@ void iterateGeneration(GameField * gameField)
 	  int rowDown = row + 1;
 	  int colRight = col + 1;
 	  int colLeft = col - 1;
+
+	  bool rowUpInBounds = rowUp >= 0;
+	  bool rowDownInBounds = rowDown < rows;
+	  bool colRightInBounds = colRight < cols;
+	  bool colLeftInBounds = colLeft >= 0;
 	      
 	  int aliveNeighbourCells = 0;
 
-	  // Check horizontal and vertical cells
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((rowUp >= 0), &field[rowUp][col]);
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((rowDown < rows), &field[rowDown][col]);
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((colRight < cols), &field[row][colRight]);
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((colLeft >= 0), &field[row][colLeft]);
+	  // Check horizontal and vertical cells	  
+	  if (rowUpInBounds && isAlive(&field[rowUp][col]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
+	  if (rowDownInBounds && isAlive(&field[rowDown][col]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
+	  if (colRightInBounds && isAlive(&field[row][colRight]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
+	  if (colLeftInBounds && isAlive(&field[row][colLeft]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
 	      
 	  // Check diagonal cells
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((rowUp >= 0) && (colRight < cols), &field[rowUp][colRight]);
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((rowDown < rows) && (colRight < cols), &field[rowDown][colRight]);
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((rowDown < rows) && (colLeft >= 0), &field[rowDown][colLeft]);
-	  aliveNeighbourCells += ifTrueCheckIfCellIsAlive((rowUp >= rows) && (colLeft >= 0), &field[rowUp][colLeft]);
+	  if ((rowUpInBounds && colRightInBounds) && isAlive(&field[rowUp][colRight]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
+	  if ((rowDownInBounds && colRightInBounds) && isAlive(&field[rowDown][colRight]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
+	  if ((rowDownInBounds && colLeftInBounds) && isAlive(&field[rowDown][colLeft]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
+	  if ((rowUpInBounds && colLeftInBounds) && isAlive(&field[rowUp][colLeft]))
+	    {
+	      ++aliveNeighbourCells;
+	    }
 	      
 	  // Apply conway's game of life rules
 	  if (aliveNeighbourCells == 2)
@@ -67,12 +98,7 @@ void iterateGeneration(GameField * gameField)
 
 }
 
-static bool ifTrueCheckIfCellIsAlive(bool condition, char * cell)
+static bool isAlive(char * cell)
 {
-  if (condition)
-    {
-      return * cell == ALIVE_CELL;
-    }
-
-  return FALSE;
+  return * cell == ALIVE_CELL;
 }

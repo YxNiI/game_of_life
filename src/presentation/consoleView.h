@@ -3,6 +3,6 @@
 
 #include "../data/gameField.h"
 
-void printView(GameField * gameField);
+void print(GameField * gameField);
 
 #endif

@@ -2,6 +2,8 @@
 
 #include "./gameField.h"
 
+static void setRandomCellsAlive(GameField * gameField);
+
 GameField * createGameField(int rows, int cols)
 {
   GameField * gameField = (GameField *) malloc(sizeof(GameField));  

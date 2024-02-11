@@ -1,5 +1,5 @@
-#ifndef GAMERULES
-#define GAMERULES
+#ifndef GAMELOGIC
+#define GAMELOGIC
 
 #include "../data/gameField.h"
 
